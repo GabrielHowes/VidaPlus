@@ -1,0 +1,63 @@
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:123}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 10
+          max-idle: 5
+          min-idle: 1
+
+  datasource:
+    url: jdbc:postgresql://localhost:1234/vidaplus_db
+    username: postgres
+    password: ""
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  sql:
+    init:
+      mode: never
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8081/realms/vidaplus
+          jwk-set-uri: http://localhost:8081/realms/vidaplus/protocol/openid-connect/certs
+  threads:
+    virtual:
+      enabled: true
+
+server:
+  port: 9000
+
+application:
+  name: "vidaplus"
+
+
+keycloak:
+  token-uri: http://localhost:8081/realms/vidaplus/protocol/openid-connect/token
+  admin-uri: http://localhost:8081/admin/realms/vidaplus/users
+  client-id: vidaplus-client
+  client-secret: vidaplus-secret-key
+  scope: openid
+  realm: vidaplus
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+
+websocket:
+  allowed-origins: ${ALLOWED_ORIGINS:*}

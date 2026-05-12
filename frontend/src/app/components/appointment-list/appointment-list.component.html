@@ -1,0 +1,124 @@
+<div class="min-h-screen bg-slate-50 p-8">
+
+  <div class="flex justify-between items-center mb-8">
+    <div class="flex items-center gap-3">
+      <button mat-icon-button routerLink="/" class="text-slate-500 hover:text-slate-700" title="Voltar">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h1 class="text-2xl font-bold text-slate-800 tracking-tight m-0">Consultas Agendadas</h1>
+    </div>
+    <button mat-raised-button (click)="openAddDialog()"
+            class="!bg-indigo-600 !text-white !rounded-xl !font-semibold !shadow-lg !shadow-indigo-200 hover:!bg-indigo-700">
+      <mat-icon>add</mat-icon>
+      Nova Consulta
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+    @for (appointment of store.appointments(); track appointment.id) {
+
+      <div class="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-slate-100">
+
+        <div class="h-1 w-full"
+             [class.bg-indigo-500]="appointment.status === 'SCHEDULED'"
+             [class.bg-emerald-500]="appointment.status === 'CONFIRMED'"
+             [class.bg-red-400]="appointment.status === 'CANCELLED'">
+        </div>
+
+        <div class="p-5">
+
+          <div class="flex justify-between items-center mb-3">
+            <div class="flex items-center gap-2">
+              <mat-icon class="!text-indigo-500 !text-lg !w-5 !h-5">calendar_today</mat-icon>
+              <span class="font-bold text-slate-800 text-base">
+                {{ appointment.appointmentDate | date:'dd/MM/yyyy' }}
+              </span>
+            </div>
+            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+              {{ appointment.appointmentDate | date:'HH:mm' }}
+            </span>
+          </div>
+
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
+              {{ appointment.patientName.charAt(0).toUpperCase() }}
+            </div>
+            <span class="text-slate-700 font-semibold text-sm">{{ appointment.patientName }}</span>
+          </div>
+
+          <button
+            (click)="toggleDetails(appointment.id)"
+            class="w-full flex items-center justify-center gap-2 py-2 px-4 border border-indigo-100 rounded-xl text-indigo-600 text-sm font-semibold bg-transparent hover:bg-indigo-50 transition-colors duration-200 cursor-pointer">
+            <span>{{ isExpanded(appointment.id) ? 'Ocultar Detalhes' : 'Ver Detalhes' }}</span>
+            <mat-icon class="!text-base !w-4 !h-4 transition-transform duration-300"
+                      [class.rotate-180]="isExpanded(appointment.id)">
+              expand_more
+            </mat-icon>
+          </button>
+
+          @if (isExpanded(appointment.id)) {
+            <div class="mt-4 pt-4 border-t border-slate-100 space-y-3">
+
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Status</span>
+                <span class="text-xs font-bold px-3 py-1 rounded-full"
+                      [class.bg-emerald-100]="appointment.status === 'CONFIRMED'"
+                      [class.text-emerald-700]="appointment.status === 'CONFIRMED'"
+                      [class.bg-indigo-100]="appointment.status === 'SCHEDULED'"
+                      [class.text-indigo-700]="appointment.status === 'SCHEDULED'"
+                      [class.bg-red-100]="appointment.status === 'CANCELLED'"
+                      [class.text-red-700]="appointment.status === 'CANCELLED'">
+                  {{ appointment.status === 'CONFIRMED' ? 'Confirmado' :
+                  appointment.status === 'SCHEDULED' ? 'Agendado' :
+                    appointment.status === 'CANCELLED' ? 'Cancelado' : appointment.status }}
+                </span>
+              </div>
+
+              <div class="flex flex-col gap-1">
+                <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Médico</span>
+                <span class="text-sm text-slate-600 font-medium">Dr(a). {{ appointment.doctorName }}</span>
+              </div>
+
+              @if (appointment.notes) {
+                <div class="flex flex-col gap-1">
+                  <span class="text-xs font-bold uppercase tracking-widest text-slate-400">Observações</span>
+                  <p class="text-sm text-slate-500 italic bg-slate-50 border-l-4 border-indigo-200 rounded-r-lg px-3 py-2 m-0 break-words">
+                    {{ appointment.notes }}
+                  </p>
+                </div>
+              }
+
+              <div class="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  (click)="deleteAppointment(appointment.id)"
+                  class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold text-red-600 bg-red-50 hover:bg-red-100 transition-colors cursor-pointer border-0">
+                  <mat-icon class="!text-base !w-4 !h-4">cancel</mat-icon>
+                  Cancelar
+                </button>
+                <button
+                  (click)="openEditDialog(appointment)"
+                  class="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-semibold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 transition-colors cursor-pointer border-0">
+                  <mat-icon class="!text-base !w-4 !h-4">edit</mat-icon>
+                  Editar
+                </button>
+              </div>
+
+            </div>
+          }
+
+        </div>
+      </div>
+
+    } @empty {
+      <div class="col-span-full flex flex-col items-center justify-center py-20 text-slate-400">
+        <div class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+          <mat-icon class="!text-4xl !w-10 !h-10 text-slate-300">event_busy</mat-icon>
+        </div>
+        <p class="text-base font-semibold text-slate-500 m-0">Nenhuma consulta agendada</p>
+        <p class="text-sm mt-1 m-0">Clique em "Nova Consulta" para começar.</p>
+      </div>
+    }
+
+  </div>
+</div>

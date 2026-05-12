@@ -1,0 +1,84 @@
+<div class="min-h-screen bg-gradient-to-br from-teal-400 via-cyan-500 to-blue-600 flex flex-col items-center justify-center p-4">
+  <div class="w-full max-w-lg bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-8 md:p-10 transform transition-all">
+    <div class="flex flex-col items-center mb-8">
+      <div class="bg-cyan-100 p-3 rounded-full mb-4">
+        <mat-icon class="text-cyan-600 text-4xl w-10 h-10 flex items-center justify-center">person_add</mat-icon>
+      </div>
+      <h1 class="text-3xl font-extrabold text-gray-800 tracking-tight">Crie sua Conta</h1>
+      <p class="text-gray-500 mt-2 text-sm">Preencha os dados para se registrar</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="register()" class="flex flex-col gap-4">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Nome Completo</mat-label>
+          <input matInput formControlName="name" placeholder="Seu nome completo">
+          <mat-icon matSuffix class="text-gray-400">badge</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Nome de Usuário</mat-label>
+          <input matInput formControlName="username" placeholder="Seu nome de usuário">
+          <mat-icon matSuffix class="text-gray-400">person</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" placeholder="seu.email@exemplo.com">
+        <mat-icon matSuffix class="text-gray-400">email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" formControlName="password" placeholder="Crie uma senha segura">
+        <mat-icon matSuffix class="text-gray-400">lock</mat-icon>
+      </mat-form-field>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Tipo de Conta</mat-label>
+          <mat-select formControlName="role">
+            <mat-option value="user">Usuário Comum</mat-option>
+            <mat-option value="doctor">Doutor(a)</mat-option>
+            <mat-option value="admin">Administrador</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>CPF</mat-label>
+          <input matInput formControlName="cpf" placeholder="000.000.000-00">
+          <mat-icon matSuffix class="text-gray-400">fingerprint</mat-icon>
+        </mat-form-field>
+      </div>
+
+      @if (registerForm.get('role')?.value === 'doctor') {
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>CRM</mat-label>
+          <input matInput formControlName="crm" placeholder="Seu registro CRM">
+          <mat-icon matSuffix class="text-gray-400">medical_information</mat-icon>
+        </mat-form-field>
+      }
+
+      @if (registerForm.get('role')?.value === 'admin') {
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>ID do Cartão</mat-label>
+          <input matInput formControlName="cardId" placeholder="ID do cartão de administrador">
+          <mat-icon matSuffix class="text-gray-400">credit_card</mat-icon>
+        </mat-form-field>
+      }
+
+      <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid"
+              class="w-full py-6 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-cyan-600 to-blue-600 border-0 mt-4">
+        Registrar
+      </button>
+    </form>
+
+    <div class="mt-6 text-center">
+      <a routerLink="/login" class="text-sm text-cyan-600 hover:text-cyan-800 font-medium transition-colors">
+        Já tem uma conta? Faça login
+      </a>
+    </div>
+  </div>
+</div>

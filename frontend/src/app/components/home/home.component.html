@@ -1,0 +1,77 @@
+<div class="flex h-screen bg-gray-50 font-sans">
+
+  <aside class="w-80 bg-gradient-to-b from-indigo-900 to-blue-900 text-white flex flex-col shadow-xl z-10 transition-all duration-300">
+
+    <div class="p-6 border-b border-indigo-800/50 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="bg-indigo-500/20 p-2 rounded-lg">
+          <mat-icon class="text-indigo-300">chat_bubble</mat-icon>
+        </div>
+        <span class="text-xl font-bold tracking-wide">VidaPlus Chat</span>
+      </div>
+    </div>
+
+    <div class="px-6 py-4 bg-indigo-800/30 flex items-center justify-between">
+      <div class="flex items-center gap-3 overflow-hidden">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-500 to-orange-400 flex items-center justify-center text-sm font-bold shadow-md">
+          {{ store.username()?.charAt(0)?.toUpperCase() || 'U' }}
+        </div>
+        <div class="flex flex-col min-w-0">
+          <span class="text-sm font-medium truncate">{{ store.username() }}</span>
+          <span class="text-xs text-indigo-300">Online</span>
+        </div>
+      </div>
+      <button mat-icon-button (click)="logout()" class="text-indigo-300 hover:text-white hover:bg-indigo-700/50 rounded-full transition-colors" title="Sair">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+
+    <div class="px-4 py-4 border-b border-indigo-800/30">
+      <button mat-button class="w-full flex items-center justify-start text-indigo-100 hover:bg-indigo-800/50 rounded-lg px-4 py-2 transition-colors" (click)="router.navigate(['/appointments'])">
+        <mat-icon class="mr-3">calendar_today</mat-icon>
+        <span class="font-medium">Agendamentos</span>
+      </button>
+    </div>
+
+    <div class="flex-grow overflow-y-auto px-4 py-4 space-y-2 custom-scrollbar">
+      <div class="flex justify-between items-center mb-4 px-2">
+        <h3 class="text-xs font-semibold text-indigo-300 uppercase tracking-wider">Salas Disponíveis</h3>
+        <button mat-icon-button class="w-8 h-8 flex items-center justify-center bg-indigo-600 hover:bg-indigo-500 rounded-full transition-colors shadow-sm" (click)="openDialog()" title="Nova Sala">
+          <mat-icon class="text-sm">add</mat-icon>
+        </button>
+      </div>
+
+      @if(store.rooms()?.length) {
+        @for(room of store.rooms(); track room.id) {
+          <div (click)="store.selectRoom(room.id)"
+               [class.bg-indigo-700]="store.selectedRoom()?.id === room.id"
+               [class.shadow-md]="store.selectedRoom()?.id === room.id"
+               [class.border-l-4]="store.selectedRoom()?.id === room.id"
+               [class.border-pink-500]="store.selectedRoom()?.id === room.id"
+               class="group flex items-center gap-3 p-3 rounded-lg hover:bg-indigo-800/50 cursor-pointer transition-all duration-200 border-l-4 border-transparent">
+            <div class="w-10 h-10 rounded-full bg-indigo-800 flex items-center justify-center text-indigo-200 group-hover:bg-indigo-700 transition-colors">
+              <mat-icon class="text-lg">tag</mat-icon>
+            </div>
+            <span class="font-medium text-sm truncate flex-grow">{{ room.name }}</span>
+            @if(store.selectedRoom()?.id === room.id) {
+              <div class="w-2 h-2 rounded-full bg-pink-500 animate-pulse"></div>
+            }
+          </div>
+        }
+      } @else {
+        <div class="flex flex-col items-center justify-center py-10 text-indigo-300/50">
+          <mat-icon class="text-4xl mb-2 opacity-50">comments_disabled</mat-icon>
+          <p class="text-sm text-center">Nenhuma sala encontrada.</p>
+          <button mat-button color="accent" (click)="openDialog()" class="mt-2 text-xs">Criar primeira sala</button>
+        </div>
+      }
+    </div>
+  </aside>
+
+  <main class="flex-grow flex flex-col bg-white relative overflow-hidden">
+
+    <div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#4f46e5 1px, transparent 1px); background-size: 24px 24px;"></div>
+
+    <app-room class="flex-grow h-full z-0"></app-room>
+  </main>
+</div>

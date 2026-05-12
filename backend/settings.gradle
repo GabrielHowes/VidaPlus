@@ -1,0 +1,12 @@
+rootProject.name = 'vidaplus'
+
+include 'controller-user'
+include 'domain-user'
+include 'infrastructure-user'
+include 'controller-appointment'
+include 'domain-appointment'
+include 'infrastructure-appointment'
+include 'common'
+include 'controller-websocket'
+include 'domain-websocket'
+include 'infrastructure-websocket'

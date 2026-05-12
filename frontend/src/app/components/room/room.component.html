@@ -1,0 +1,85 @@
+<div class="flex flex-col h-full bg-gray-50 relative">
+  @if(store.selectedRoom(); as room) {
+
+    <header class="flex items-center p-4 border-b border-gray-200 bg-white shadow-sm z-10">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center">
+          <mat-icon class="text-indigo-600">tag</mat-icon>
+        </div>
+        <h2 class="text-lg font-bold text-gray-800 tracking-tight">{{ room.name }}</h2>
+      </div>
+      <div class="flex-grow"></div>
+      <button mat-icon-button class="text-gray-500 hover:text-gray-800">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+    </header>
+
+    <div #messagesContainer class="flex-grow p-6 overflow-y-auto custom-scrollbar">
+      <div class="space-y-6">
+        @for(message of store.messages(); track message.id) {
+          @let isUser = message.role === 'user';
+
+          <div class="flex items-start gap-3" [class.flex-row-reverse]="isUser">
+
+            <div class="w-10 h-10 rounded-full flex-shrink-0 bg-gradient-to-tr flex items-center justify-center text-white font-bold shadow-md"
+                 [class.from-pink-500]="isUser"
+                 [class.to-orange-400]="isUser"
+                 [class.from-gray-400]="!isUser"
+                 [class.to-gray-600]="!isUser">
+              {{ message.username.charAt(0).toUpperCase() }}
+            </div>
+
+            <div class="flex flex-col max-w-lg">
+              <div class="px-5 py-3 rounded-2xl shadow-sm"
+                   [class.bg-gradient-to-r]="isUser"
+                   [class.from-indigo-600]="isUser"
+                   [class.to-purple-600]="isUser"
+                   [class.text-white]="isUser"
+                   [class.rounded-br-none]="isUser"
+                   [class.bg-white]="!isUser"
+                   [class.text-gray-800]="!isUser"
+                   [class.rounded-bl-none]="!isUser">
+                <p class="font-bold text-sm mb-1">{{ message.username }} <span class="text-xs opacity-75 font-normal">({{ message.role }})</span></p>
+                <p class="text-base leading-relaxed">{{ message.content }}</p>
+              </div>
+              <p class="text-xs text-gray-400 mt-2" [class.text-right]="isUser">
+                {{ message.createdAt | date:'shortTime' }}
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    @if(store.typingUsers().length > 0) {
+      <div class="px-6 py-1 text-sm text-gray-400 italic">
+        {{ store.typingUsers().join(', ') }}
+        {{ store.typingUsers().length === 1 ? 'está digitando...' : 'estão digitando...' }}
+      </div>
+    }
+
+    <footer class="p-4 bg-white border-t border-gray-200 shadow-inner-top z-10">
+      <form (ngSubmit)="sendMessage()" class="flex items-center gap-4">
+        <mat-form-field appearance="outline" class="flex-grow rounded-full">
+          <mat-label>Sua mensagem...</mat-label>
+          <input matInput [formControl]="formControl"
+                 (keyup.enter)="sendMessage()"
+                 (input)="onTyping()"
+                 placeholder="Digite algo legal...">
+          <mat-icon matSuffix class="text-gray-400">sentiment_satisfied_alt</mat-icon>
+        </mat-form-field>
+        <button mat-fab color="primary" type="submit" [disabled]="formControl.invalid" class="shadow-lg transform hover:scale-105 transition-transform">
+          <mat-icon>send</mat-icon>
+        </button>
+      </form>
+    </footer>
+  } @else {
+    <div class="flex flex-col items-center justify-center h-full text-gray-500 text-center p-8">
+      <div class="bg-indigo-100 p-6 rounded-full mb-6">
+        <mat-icon class="text-indigo-500 text-6xl w-16 h-16 flex items-center justify-center">forum</mat-icon>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-700 mb-2">Bem-vindo ao Chat!</h2>
+      <p class="max-w-sm">Selecione uma sala na barra lateral para ver as mensagens ou crie uma nova para começar a conversar.</p>
+    </div>
+  }
+</div>

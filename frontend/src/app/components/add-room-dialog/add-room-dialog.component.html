@@ -1,0 +1,29 @@
+<div class="p-6 bg-white rounded-lg">
+  <div class="flex items-center gap-3 mb-6">
+    <div class="bg-indigo-100 p-2 rounded-full">
+      <mat-icon class="text-indigo-600">add_circle_outline</mat-icon>
+    </div>
+    <h2 mat-dialog-title class="text-xl font-bold text-gray-800 m-0">Criar Nova Sala</h2>
+  </div>
+
+  <mat-dialog-content class="flex flex-col">
+    <p class="text-gray-500 text-sm mb-4">Dê um nome para a nova sala de chat.</p>
+    <mat-form-field appearance="outline" class="w-full">
+      <mat-label>Nome da Sala</mat-label>
+      <input matInput [formControl]="formControl" cdkFocusInitial placeholder="Ex: Projetos, Geral...">
+      <mat-icon matSuffix class="text-gray-400">edit</mat-icon>
+      @if (formControl.hasError('required')) {
+        <mat-error>
+          O nome é obrigatório
+        </mat-error>
+      }
+    </mat-form-field>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end" class="mt-2 gap-2">
+    <button mat-button mat-dialog-close class="text-gray-600 hover:bg-gray-100">Cancelar</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="formControl.value" [disabled]="formControl.invalid" class="bg-indigo-600 hover:bg-indigo-700">
+      Criar Sala
+    </button>
+  </mat-dialog-actions>
+</div>

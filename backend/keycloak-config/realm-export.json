@@ -1,0 +1,56 @@
+{
+  "realm": "vidaplus",
+  "enabled": true,
+  "registrationAllowed": true,
+  "verifyEmail": false,
+  "requiredActions": [],
+  "roles": {
+    "realm": [
+      { "name": "admin" },
+      { "name": "user" },
+      { "name": "medic" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "vidaplus-client",
+      "enabled": true,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "vidaplus-secret-key",
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "publicClient": false,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": true
+    }
+  ],
+  "users": [
+    {
+      "username": "service-account-vidaplus-client",
+      "enabled": true,
+      "serviceAccountClientId": "vidaplus-client",
+      "clientRoles": {
+        "realm-management": [
+          "manage-users",
+          "view-users",
+          "query-users",
+          "query-groups",
+          "view-realm",
+          "manage-realm"
+        ]
+      }
+    },
+    {
+      "username": "admin",
+      "enabled": true,
+      "email": "admin@email.com",
+      "emailVerified": true,
+      "firstName": "admin",
+      "lastName": "User",
+      "credentials": [{ "type": "password", "value": "admin", "temporary": false }],
+      "realmRoles": ["admin"],
+      "requiredActions": [],
+      "totp": false
+    }
+  ]
+}

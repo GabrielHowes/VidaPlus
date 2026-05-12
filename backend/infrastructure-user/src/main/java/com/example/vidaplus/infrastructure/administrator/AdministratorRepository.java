@@ -1,0 +1,18 @@
+package com.example.vidaplus.infrastructure.administrator;
+
+import com.example.vidaplus.infrastructure.administrator.entity.AdministratorEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+
+import java.util.Optional;
+
+
+@Repository
+public interface AdministratorRepository extends JpaRepository<AdministratorEntity, Long> {
+
+    Optional<AdministratorEntity> findByCpf(String cpf);
+
+    Optional<AdministratorEntity> findByEmail(String email);
+
+}
